@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:morse_pad/src/themes/system_ui_theme.dart';
+import 'package:morse_pad/src/utilities/text_theme_extension.dart';
 
 // Logger
 final Logger log = Logger();
@@ -45,6 +46,7 @@ class CustomThemeData {
       toggleableActiveColor: colorSchemeLight.primary,
       scaffoldBackgroundColor: colorSchemeLight.background,
       iconTheme: baseThemeDataLight.iconTheme.copyWith(color: iconColor),
+      textTheme: _textTheme(baseThemeDataLight),
       appBarTheme: _appBarTheme(baseThemeDataLight, colorSchemeLight).copyWith(
         iconTheme: baseThemeDataLight.iconTheme.copyWith(color: iconColor),
       ),
@@ -87,6 +89,7 @@ class CustomThemeData {
       primaryColor: colorSchemeDark.primary,
       scaffoldBackgroundColor: colorSchemeDark.background,
       toggleableActiveColor: colorSchemeDark.primary,
+      textTheme: _textTheme(baseThemeDataDark),
       appBarTheme: _appBarTheme(baseThemeDataDark, colorSchemeDark),
       cardTheme: _cardTheme(baseThemeDataDark).copyWith(
         color: colorSchemeDark.surface,
@@ -96,6 +99,16 @@ class CustomThemeData {
       ),
       elevatedButtonTheme: _elevatedButtonTheme(),
       splashFactory: _splashFactory(),
+    );
+  }
+
+  static TextTheme _textTheme(ThemeData baseThemeData) {
+    return baseThemeData.textTheme.applyWith(
+      fontFamily: 'Product Sans',
+      fontFeatures: const [
+        FontFeature.disable('calt'),
+        FontFeature.disable('clig'),
+      ],
     );
   }
 
