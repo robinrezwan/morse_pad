@@ -90,13 +90,17 @@ class _MyHomePageState extends State<MyHomePage> {
         final ThemeMode? currentTheme = prefProvider.getThemeMode();
 
         Icon? themeIcon;
+        String? themeTooltip;
 
         if (currentTheme == ThemeMode.light) {
-          themeIcon = const Icon(CustomIcons.lightTheme);
-        } else if (currentTheme == ThemeMode.dark) {
           themeIcon = const Icon(CustomIcons.darkTheme);
-        } else {
+          themeTooltip = "Dark theme";
+        } else if (currentTheme == ThemeMode.dark) {
           themeIcon = const Icon(CustomIcons.systemTheme);
+          themeTooltip = "System theme";
+        } else {
+          themeIcon = const Icon(CustomIcons.lightTheme);
+          themeTooltip = "Light theme";
         }
 
         return Container(
@@ -106,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               _switchTheme();
             },
-            tooltip: "Switch theme",
+            tooltip: themeTooltip,
           ),
         );
       },
