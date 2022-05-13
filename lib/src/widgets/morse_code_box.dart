@@ -7,6 +7,7 @@ import 'package:morse_pad/src/utilities/constants.dart';
 import 'package:morse_pad/src/utilities/custom_icons.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
 import 'package:morse_pad/src/widgets/morse_code_player.dart';
+import 'package:morse_pad/src/widgets/morse_keyboard.dart';
 import 'package:morse_pad/src/widgets/text_box.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -29,6 +30,8 @@ class MorseCodeBox extends StatefulWidget {
 class _MorseCodeBoxState extends State<MorseCodeBox> {
   final FocusNode _focusNode = FocusNode();
   final MorseCodePlayer _morseCodePlayer = MorseCodePlayer();
+
+  late PersistentBottomSheetController _bottomSheetController;
 
   @override
   void initState() {
@@ -53,14 +56,31 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
     final MorseProvider morseProvider = Provider.of<MorseProvider>(context);
 
     return TextBox(
-      keyboardType: TextInputType.multiline,
-      // keyboardType: TextInputType.none,
+      // keyboardType: TextInputType.multiline,
+      keyboardType: TextInputType.none,
       prefixIconData: CustomIcons.code,
       hintText: "Morse code",
       focusNode: _focusNode,
       controller: widget.controller,
       onFocusChange: (hasFocus) {
         morseProvider.setMorseCodeFocus(hasFocus);
+
+        if (hasFocus) {
+          Future.delayed(const Duration(milliseconds: 100), () {
+            _bottomSheetController = Scaffold.of(context).showBottomSheet(
+              (BuildContext context) {
+                return MorseKeyboard(
+                  onPressKey: (value) {
+                    _updateTextFiled(value);
+                    morseProvider.setMorseCode(widget.controller.text);
+                  },
+                );
+              },
+            );
+          });
+        } else {
+          _bottomSheetController.close();
+        }
       },
       onValueChange: (value) {
         morseProvider.setMorseCode(value);
@@ -157,6 +177,37 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
           },
         ),
       ],
+    );
+  }
+
+  void _updateTextFiled(String value) {
+    String text = widget.controller.text;
+    TextSelection selection = widget.controller.selection;
+
+    String textBefore = selection.textBefore(text);
+    String textAfter = selection.textAfter(text);
+
+    String updatedText;
+    int cursorPosition;
+
+    if (value == "\\") {
+      if (selection.isCollapsed && textBefore.isNotEmpty) {
+        updatedText =
+            textBefore.substring(0, textBefore.length - 1) + textAfter;
+        cursorPosition = textBefore.length - 1;
+      } else {
+        updatedText = textBefore + textAfter;
+        cursorPosition = textBefore.length;
+      }
+    } else {
+      updatedText = textBefore + value + textAfter;
+      cursorPosition = textBefore.length + value.length;
+    }
+
+    widget.controller.clearComposing();
+    widget.controller.value = TextEditingValue(
+      text: updatedText,
+      selection: TextSelection.collapsed(offset: cursorPosition),
     );
   }
 }

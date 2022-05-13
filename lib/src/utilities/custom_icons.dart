@@ -19,6 +19,7 @@ class CustomIcons {
   static const IconData paste = Feather.clipboard;
   static const IconData clear = Feather.x;
   static const IconData share = Feather.share_2;
+  static const IconData backspace = Feather.delete;
 
   static const IconData systemTheme =
       IconData(0xe800, fontFamily: 'CustomIcons');
