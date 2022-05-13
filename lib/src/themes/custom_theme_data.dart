@@ -11,7 +11,7 @@ final Logger log = Logger();
 class CustomThemeData {
   CustomThemeData._();
 
-  static const Color _primaryColor = Colors.blue;
+  static const Color _primaryColor = Color(0xFF3F87FF);
 
   /// Light theme for this app
   static ThemeData light() {
