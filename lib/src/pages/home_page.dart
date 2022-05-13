@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
+import 'package:morse_pad/src/pages/about_page.dart';
 import 'package:morse_pad/src/providers/morse_provider.dart';
 import 'package:morse_pad/src/providers/preference_provider.dart';
 import 'package:morse_pad/src/providers/them_provider.dart';
@@ -47,7 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
         leading: CustomIconButton(
           icon: const Icon(CustomIcons.about),
           onPressed: () {
-            // TODO: 5/8/2022 Open about page
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) => const AboutPage(),
+              ),
+            );
           },
           tooltip: "About",
         ),

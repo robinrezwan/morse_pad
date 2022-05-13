@@ -7,6 +7,7 @@ class CustomIcons {
   CustomIcons._();
 
   static const IconData about = Feather.info;
+  static const IconData back = Feather.arrow_left;
   static const IconData lightTheme = Feather.sun;
   static const IconData darkTheme = Feather.moon;
   static const IconData chevronLeft = Feather.chevron_left;

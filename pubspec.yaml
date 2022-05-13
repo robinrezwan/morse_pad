@@ -31,9 +31,11 @@ dependencies:
     sdk: flutter
 
   logger: ^1.1.0
+  package_info_plus: ^1.4.2
   provider: ^6.0.2
   shared_preferences: ^2.0.13
   flutter_icons: ^1.1.0
+  flutter_svg: ^1.0.3
   share_plus: ^4.0.4
   fluttertoast: ^8.0.9
   flutter_tts: ^3.3.3
@@ -82,6 +84,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
+    - lib/assets/images/app_icon.svg
     - lib/assets/images/splash_screen.png
     - lib/assets/images/splash_screen_dark.png
     - lib/assets/images/splash_screen_v31.png
