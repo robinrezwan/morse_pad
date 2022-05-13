@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class TextBox extends StatelessWidget {
@@ -39,6 +41,10 @@ class TextBox extends StatelessWidget {
                   maxLines: null,
                   style: const TextStyle(
                     fontFamily: 'JetBrains Mono',
+                    fontFeatures: [
+                      FontFeature.disable('calt'),
+                      FontFeature.disable('clig'),
+                    ],
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
