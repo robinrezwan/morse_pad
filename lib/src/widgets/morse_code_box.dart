@@ -5,8 +5,8 @@ import 'package:logger/logger.dart';
 import 'package:morse_pad/src/providers/morse_provider.dart';
 import 'package:morse_pad/src/utilities/constants.dart';
 import 'package:morse_pad/src/utilities/custom_icons.dart';
+import 'package:morse_pad/src/utilities/morse_code_player.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
-import 'package:morse_pad/src/widgets/morse_code_player.dart';
 import 'package:morse_pad/src/widgets/morse_keyboard.dart';
 import 'package:morse_pad/src/widgets/text_box.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +47,7 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
 
   @override
   void dispose() {
-    _morseCodePlayer.stop();
+    _morseCodePlayer.disposePlayer();
     super.dispose();
   }
 

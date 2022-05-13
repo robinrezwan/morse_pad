@@ -20,6 +20,10 @@ class PlainTextPlayer {
     });
   }
 
+  void disposePlayer() {
+    stop();
+  }
+
   void setVolume(double volume) {
     _tts.setVolume(volume);
   }

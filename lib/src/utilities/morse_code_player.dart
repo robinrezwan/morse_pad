@@ -22,6 +22,11 @@ class MorseCodePlayer {
     SoundGenerator.onIsPlayingChanged.listen(onStartOrStop);
   }
 
+  void disposePlayer() {
+    stop();
+    SoundGenerator.release();
+  }
+
   void setVolume(double volume) {
     _volume = volume;
   }

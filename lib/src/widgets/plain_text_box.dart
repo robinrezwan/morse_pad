@@ -5,8 +5,8 @@ import 'package:logger/logger.dart';
 import 'package:morse_pad/src/providers/morse_provider.dart';
 import 'package:morse_pad/src/utilities/constants.dart';
 import 'package:morse_pad/src/utilities/custom_icons.dart';
+import 'package:morse_pad/src/utilities/plain_text_player.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
-import 'package:morse_pad/src/widgets/plain_text_player.dart';
 import 'package:morse_pad/src/widgets/text_box.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -35,18 +35,18 @@ class _PlainTextBoxState extends State<PlainTextBox> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((duration) {
-      _focusNode.requestFocus();
-
       _plainTextPlayer.initPlayer((isPlaying) {
         Provider.of<MorseProvider>(context, listen: false)
             .setPlainTextPlaying(isPlaying);
       });
+
+      _focusNode.requestFocus();
     });
   }
 
   @override
   void dispose() {
-    _plainTextPlayer.stop();
+    _plainTextPlayer.disposePlayer();
     super.dispose();
   }
 
