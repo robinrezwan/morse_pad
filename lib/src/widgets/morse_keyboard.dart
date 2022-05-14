@@ -29,7 +29,7 @@ class MorseKeyboard extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       primary: Theme.of(context).colorScheme.background,
                       onPrimary: Theme.of(context).colorScheme.onBackground,
                       textStyle: const TextStyle(
@@ -38,7 +38,7 @@ class MorseKeyboard extends StatelessWidget {
                       ),
                       splashFactory: NoSplash.splashFactory,
                     ),
-                    child: const Text("."),
+                    child: const Text("·"),
                     onPressed: () {
                       onPressKey(".");
                     },
@@ -48,7 +48,7 @@ class MorseKeyboard extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 15),
                       primary: Theme.of(context).colorScheme.background,
                       onPrimary: Theme.of(context).colorScheme.onBackground,
                       textStyle: const TextStyle(
@@ -57,7 +57,7 @@ class MorseKeyboard extends StatelessWidget {
                       ),
                       splashFactory: NoSplash.splashFactory,
                     ),
-                    child: const Text("-"),
+                    child: const Text("−"),
                     onPressed: () {
                       onPressKey("-");
                     },
@@ -65,16 +65,18 @@ class MorseKeyboard extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.all(0),
+                    fixedSize: const Size(45, 45),
                     primary: Theme.of(context).colorScheme.background,
                     onPrimary: Theme.of(context).colorScheme.onBackground,
                     textStyle: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                     splashFactory: NoSplash.splashFactory,
@@ -87,8 +89,7 @@ class MorseKeyboard extends StatelessWidget {
                 const SizedBox(width: 5),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    fixedSize: const Size(140, 38),
+                    fixedSize: const Size(140, 45),
                     splashFactory: NoSplash.splashFactory,
                   ),
                   child: null,
@@ -99,7 +100,8 @@ class MorseKeyboard extends StatelessWidget {
                 const SizedBox(width: 5),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.all(0),
+                    fixedSize: const Size(45, 45),
                     primary: Theme.of(context).colorScheme.background,
                     onPrimary: Theme.of(context).colorScheme.onBackground,
                     splashFactory: NoSplash.splashFactory,
