@@ -11,6 +11,9 @@ class MorseProvider extends ChangeNotifier {
   bool _plainTextPlaying = false;
   bool _morseCodePlaying = false;
 
+  double _plainTextPlayingProgress = 0;
+  double _morseCodePlayingProgress = 0;
+
   MorseProvider();
 
   String getPlainText() {
@@ -38,8 +41,10 @@ class MorseProvider extends ChangeNotifier {
   }
 
   void setPlainTextFocus(bool hasFocus) {
-    _plainTextHasFocus = hasFocus;
-    notifyListeners();
+    if (_plainTextHasFocus != hasFocus) {
+      _plainTextHasFocus = hasFocus;
+      notifyListeners();
+    }
   }
 
   bool getMorseCodeFocus() {
@@ -47,8 +52,10 @@ class MorseProvider extends ChangeNotifier {
   }
 
   void setMorseCodeFocus(bool hasFocus) {
-    _morseCodeHasFocus = hasFocus;
-    notifyListeners();
+    if (_morseCodeHasFocus != hasFocus) {
+      _morseCodeHasFocus = hasFocus;
+      notifyListeners();
+    }
   }
 
   bool getPlainTextPlaying() {
@@ -56,8 +63,13 @@ class MorseProvider extends ChangeNotifier {
   }
 
   void setPlainTextPlaying(bool isPlaying) {
-    _plainTextPlaying = isPlaying;
-    notifyListeners();
+    if (_plainTextPlaying != isPlaying) {
+      if (!isPlaying) {
+        _plainTextPlayingProgress = 0;
+      }
+      _plainTextPlaying = isPlaying;
+      notifyListeners();
+    }
   }
 
   bool getMorseCodePlaying() {
@@ -65,7 +77,30 @@ class MorseProvider extends ChangeNotifier {
   }
 
   void setMorseCodePlaying(bool isPlaying) {
-    _morseCodePlaying = isPlaying;
+    if (_morseCodePlaying != isPlaying) {
+      if (!isPlaying) {
+        _morseCodePlayingProgress = 0;
+      }
+      _morseCodePlaying = isPlaying;
+      notifyListeners();
+    }
+  }
+
+  double getPlainTextPlayingProgress() {
+    return _plainTextPlayingProgress;
+  }
+
+  void setPlainTextPlayingProgress(double progress) {
+    _plainTextPlayingProgress = progress;
+    notifyListeners();
+  }
+
+  double getMorseCodePlayingProgress() {
+    return _morseCodePlayingProgress;
+  }
+
+  void setMorseCodePlayingProgress(double progress) {
+    _morseCodePlayingProgress = progress;
     notifyListeners();
   }
 }

@@ -9,7 +9,10 @@ class PlainTextPlayer {
 
   PlainTextPlayer();
 
-  void initPlayer(void Function(bool isPlaying) onStartOrStop) {
+  void initPlayer({
+    required void Function(bool isPlaying) onStartOrStop,
+    required void Function(double progress) onProgress,
+  }) {
     // Initializing text to speech
     _tts.setStartHandler(() {
       onStartOrStop(true);
@@ -17,6 +20,15 @@ class PlainTextPlayer {
 
     _tts.setCompletionHandler(() {
       onStartOrStop(false);
+    });
+
+    _tts.setCancelHandler(() {
+      onStartOrStop(false);
+    });
+
+    _tts.setProgressHandler((text, start, end, word) {
+      double progress = end / text.length;
+      onProgress(progress);
     });
   }
 

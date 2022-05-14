@@ -7,62 +7,78 @@ class TextBox extends StatelessWidget {
     Key? key,
     this.keyboardType,
     required this.controller,
-    required this.prefixIconData,
+    required this.prefixIcon,
     required this.hintText,
     required this.focusNode,
     required this.onFocusChange,
     required this.onValueChange,
+    required this.onTap,
     required this.actions,
   }) : super(key: key);
 
-  final IconData prefixIconData;
+  final Widget prefixIcon;
   final String hintText;
   final TextInputType? keyboardType;
   final TextEditingController controller;
   final FocusNode focusNode;
   final void Function(bool) onFocusChange;
   final void Function(String) onValueChange;
+  final void Function() onTap;
   final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      child: Container(
-        height: 140,
-        margin: const EdgeInsets.all(8),
+      child: SizedBox(
+        height: 160,
         child: Column(
           children: [
             Expanded(
-              child: Focus(
-                child: TextField(
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  keyboardType: keyboardType,
-                  maxLines: null,
-                  style: const TextStyle(
-                    fontFamily: 'JetBrains Mono',
-                    fontFeatures: [
-                      FontFeature.disable('calt'),
-                      FontFeature.disable('clig'),
-                    ],
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: hintText,
-                    prefixIcon: Icon(
-                      prefixIconData,
-                      color: Theme.of(context).iconTheme.color,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(6, 8, 6, 0),
+                child: Focus(
+                  child: TextField(
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    keyboardType: keyboardType,
+                    maxLines: null,
+                    style: const TextStyle(
+                      fontFamily: 'JetBrains Mono',
+                      fontFeatures: [
+                        FontFeature.disable('calt'),
+                        FontFeature.disable('clig'),
+                      ],
                     ),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: hintText,
+                      prefixIcon: Container(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            IconTheme(
+                              data: Theme.of(context).iconTheme,
+                              child: prefixIcon,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    focusNode: focusNode,
+                    controller: controller,
+                    onChanged: onValueChange,
+                    onTap: onTap,
                   ),
-                  focusNode: focusNode,
-                  controller: controller,
-                  onChanged: onValueChange,
+                  onFocusChange: onFocusChange,
                 ),
-                onFocusChange: onFocusChange,
               ),
             ),
-            Row(
-              children: actions,
+            Container(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: Row(
+                children: actions,
+              ),
             ),
           ],
         ),

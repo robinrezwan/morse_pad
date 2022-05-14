@@ -9,6 +9,7 @@ import 'package:morse_pad/src/utilities/morse_code_player.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
 import 'package:morse_pad/src/widgets/morse_keyboard.dart';
 import 'package:morse_pad/src/widgets/text_box.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -38,10 +39,17 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((duration) {
-      _morseCodePlayer.initPlayer((isPlaying) {
-        Provider.of<MorseProvider>(context, listen: false)
-            .setMorseCodePlaying(isPlaying);
-      });
+      final MorseProvider morseProvider =
+          Provider.of<MorseProvider>(context, listen: false);
+
+      _morseCodePlayer.initPlayer(
+        onStartOrStop: (isPlaying) {
+          morseProvider.setMorseCodePlaying(isPlaying);
+        },
+        onProgress: (progress) {
+          morseProvider.setMorseCodePlayingProgress(progress);
+        },
+      );
     });
   }
 
@@ -53,12 +61,26 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
 
   @override
   Widget build(BuildContext context) {
-    final MorseProvider morseProvider = Provider.of<MorseProvider>(context);
+    final MorseProvider morseProvider =
+        Provider.of<MorseProvider>(context, listen: false);
 
     return TextBox(
       // keyboardType: TextInputType.multiline,
       keyboardType: TextInputType.none,
-      prefixIconData: CustomIcons.code,
+      prefixIcon: Consumer<MorseProvider>(
+        builder: (context, morseProvider, child) {
+          if (morseProvider.getMorseCodePlaying()) {
+            return CircularPercentIndicator(
+              radius: 12.0,
+              lineWidth: 2.5,
+              animateFromLastPercent: true,
+              percent: morseProvider.getMorseCodePlayingProgress(),
+            );
+          } else {
+            return const Icon(CustomIcons.code);
+          }
+        },
+      ),
       hintText: "Morse code",
       focusNode: _focusNode,
       controller: widget.controller,
@@ -83,25 +105,33 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
         }
       },
       onValueChange: (value) {
+        _morseCodePlayer.stop();
         morseProvider.setMorseCode(value);
       },
+      onTap: () {
+        _morseCodePlayer.stop();
+      },
       actions: [
-        CustomIconButton(
-          icon: morseProvider.getMorseCodePlaying()
-              ? const Icon(CustomIcons.stop)
-              : const Icon(CustomIcons.play),
-          tooltip: morseProvider.getMorseCodePlaying() ? "Stop" : "Play",
-          onPressed: () {
-            if (morseProvider.getMorseCode().isNotEmpty) {
-              morseProvider.getMorseCodePlaying()
-                  ? _morseCodePlayer.stop()
-                  : _morseCodePlayer.play(morseProvider.getMorseCode());
-            } else {
-              Fluttertoast.showToast(
-                msg: emptyCode,
-                toastLength: Toast.LENGTH_SHORT,
-              );
-            }
+        Consumer<MorseProvider>(
+          builder: (context, morseProvider, child) {
+            return CustomIconButton(
+              icon: morseProvider.getMorseCodePlaying()
+                  ? const Icon(CustomIcons.stop)
+                  : const Icon(CustomIcons.play),
+              tooltip: morseProvider.getMorseCodePlaying() ? "Stop" : "Play",
+              onPressed: () {
+                if (morseProvider.getMorseCode().isNotEmpty) {
+                  morseProvider.getMorseCodePlaying()
+                      ? _morseCodePlayer.stop()
+                      : _morseCodePlayer.play(morseProvider.getMorseCode());
+                } else {
+                  Fluttertoast.showToast(
+                    msg: emptyCode,
+                    toastLength: Toast.LENGTH_SHORT,
+                  );
+                }
+              },
+            );
           },
         ),
         CustomIconButton(
@@ -109,9 +139,7 @@ class _MorseCodeBoxState extends State<MorseCodeBox> {
           tooltip: "Copy",
           onPressed: () {
             if (morseProvider.getMorseCode().isNotEmpty) {
-              Clipboard.setData(
-                ClipboardData(text: widget.controller.text),
-              );
+              Clipboard.setData(ClipboardData(text: widget.controller.text));
 
               Fluttertoast.showToast(
                 msg: codeCopied,

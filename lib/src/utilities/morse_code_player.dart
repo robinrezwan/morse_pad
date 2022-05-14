@@ -1,18 +1,27 @@
+import 'package:logger/logger.dart';
 import 'package:sound_generator/sound_generator.dart';
 import 'package:sound_generator/waveTypes.dart';
+
+// Logger
+final Logger log = Logger();
 
 class MorseCodePlayer {
   static const int _sampleRate = 16000;
   static const double _frequency = 500;
   double _volume = 1;
 
-  final int _unitTimeInMs = 100;
+  static const int _unitTimeInMs = 100;
 
   bool _isPlaying = false;
 
+  late Function(double progress) _onProgress;
+
   MorseCodePlayer();
 
-  void initPlayer(void Function(bool isPlaying) onStartOrStop) {
+  void initPlayer({
+    required void Function(bool isPlaying) onStartOrStop,
+    required void Function(double progress) onProgress,
+  }) {
     // Initializing sound generator
     SoundGenerator.init(_sampleRate);
     SoundGenerator.setFrequency(_frequency);
@@ -20,6 +29,8 @@ class MorseCodePlayer {
     SoundGenerator.setVolume(0);
 
     SoundGenerator.onIsPlayingChanged.listen(onStartOrStop);
+
+    _onProgress = onProgress;
   }
 
   void disposePlayer() {
@@ -35,19 +46,21 @@ class MorseCodePlayer {
     _isPlaying = true;
 
     // Calculating necessary durations
-    final Duration dotTime = Duration(milliseconds: _unitTimeInMs);
-    final Duration dashTime = Duration(milliseconds: _unitTimeInMs * 3);
-    final Duration spaceCodeTime = Duration(milliseconds: _unitTimeInMs);
-    final Duration spaceLetterTime = Duration(milliseconds: _unitTimeInMs * 3);
-    final Duration spaceWordTime = Duration(milliseconds: _unitTimeInMs * 7);
+    const Duration dotTime = Duration(milliseconds: _unitTimeInMs);
+    const Duration dashTime = Duration(milliseconds: _unitTimeInMs * 3);
+    const Duration spaceCodeTime = Duration(milliseconds: _unitTimeInMs);
+    const Duration spaceLetterTime = Duration(milliseconds: _unitTimeInMs * 3);
+    const Duration spaceWordTime = Duration(milliseconds: _unitTimeInMs * 7);
 
     // Starting sound generation
     SoundGenerator.play();
     await Future.delayed(const Duration(milliseconds: 400));
 
     // Playing code
-    for (String character in code.split('')) {
-      switch (character) {
+    final List<String> characters = code.split('');
+
+    for (int index = 0; index < characters.length; index++) {
+      switch (characters[index]) {
         case '.':
           SoundGenerator.setVolume(_volume);
           await Future.delayed(dotTime);
@@ -75,6 +88,9 @@ class MorseCodePlayer {
       }
 
       await Future.delayed(spaceCodeTime);
+
+      double progress = (index + 1) / characters.length;
+      _onProgress(progress);
     }
 
     // Stopping sound generation

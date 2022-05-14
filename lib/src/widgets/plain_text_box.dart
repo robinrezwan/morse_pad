@@ -8,6 +8,7 @@ import 'package:morse_pad/src/utilities/custom_icons.dart';
 import 'package:morse_pad/src/utilities/plain_text_player.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
 import 'package:morse_pad/src/widgets/text_box.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -35,10 +36,17 @@ class _PlainTextBoxState extends State<PlainTextBox> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((duration) {
-      _plainTextPlayer.initPlayer((isPlaying) {
-        Provider.of<MorseProvider>(context, listen: false)
-            .setPlainTextPlaying(isPlaying);
-      });
+      final MorseProvider morseProvider =
+          Provider.of<MorseProvider>(context, listen: false);
+
+      _plainTextPlayer.initPlayer(
+        onStartOrStop: (isPlaying) {
+          morseProvider.setPlainTextPlaying(isPlaying);
+        },
+        onProgress: (progress) {
+          morseProvider.setPlainTextPlayingProgress(progress);
+        },
+      );
 
       _focusNode.requestFocus();
     });
@@ -47,16 +55,31 @@ class _PlainTextBoxState extends State<PlainTextBox> {
   @override
   void dispose() {
     _plainTextPlayer.disposePlayer();
+    _focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final MorseProvider morseProvider = Provider.of<MorseProvider>(context);
+    final MorseProvider morseProvider =
+        Provider.of<MorseProvider>(context, listen: false);
 
     return TextBox(
       keyboardType: TextInputType.multiline,
-      prefixIconData: CustomIcons.text,
+      prefixIcon: Consumer<MorseProvider>(
+        builder: (context, morseProvider, child) {
+          if (morseProvider.getPlainTextPlaying()) {
+            return CircularPercentIndicator(
+              radius: 12.0,
+              lineWidth: 2.5,
+              animateFromLastPercent: true,
+              percent: morseProvider.getPlainTextPlayingProgress(),
+            );
+          } else {
+            return const Icon(CustomIcons.text);
+          }
+        },
+      ),
       hintText: "Plain text",
       focusNode: _focusNode,
       controller: widget.controller,
@@ -64,25 +87,33 @@ class _PlainTextBoxState extends State<PlainTextBox> {
         morseProvider.setPlainTextFocus(hasFocus);
       },
       onValueChange: (value) {
+        _plainTextPlayer.stop();
         morseProvider.setPlainText(value);
       },
+      onTap: () {
+        _plainTextPlayer.stop();
+      },
       actions: [
-        CustomIconButton(
-          icon: morseProvider.getPlainTextPlaying()
-              ? const Icon(CustomIcons.stop)
-              : const Icon(CustomIcons.play),
-          tooltip: morseProvider.getPlainTextPlaying() ? "Stop" : "Play",
-          onPressed: () {
-            if (morseProvider.getPlainText().isNotEmpty) {
-              morseProvider.getPlainTextPlaying()
-                  ? _plainTextPlayer.stop()
-                  : _plainTextPlayer.play(morseProvider.getPlainText());
-            } else {
-              Fluttertoast.showToast(
-                msg: emptyText,
-                toastLength: Toast.LENGTH_SHORT,
-              );
-            }
+        Consumer<MorseProvider>(
+          builder: (context, morseProvider, child) {
+            return CustomIconButton(
+              icon: morseProvider.getPlainTextPlaying()
+                  ? const Icon(CustomIcons.stop)
+                  : const Icon(CustomIcons.play),
+              tooltip: morseProvider.getPlainTextPlaying() ? "Stop" : "Play",
+              onPressed: () {
+                if (morseProvider.getPlainText().isNotEmpty) {
+                  morseProvider.getPlainTextPlaying()
+                      ? _plainTextPlayer.stop()
+                      : _plainTextPlayer.play(morseProvider.getPlainText());
+                } else {
+                  Fluttertoast.showToast(
+                    msg: emptyText,
+                    toastLength: Toast.LENGTH_SHORT,
+                  );
+                }
+              },
+            );
           },
         ),
         CustomIconButton(
@@ -90,9 +121,7 @@ class _PlainTextBoxState extends State<PlainTextBox> {
           tooltip: "Copy",
           onPressed: () {
             if (morseProvider.getPlainText().isNotEmpty) {
-              Clipboard.setData(
-                ClipboardData(text: widget.controller.text),
-              );
+              Clipboard.setData(ClipboardData(text: widget.controller.text));
 
               Fluttertoast.showToast(
                 msg: textCopied,
