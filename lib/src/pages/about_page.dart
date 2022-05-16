@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:logger/logger.dart';
 import 'package:morse_pad/src/utilities/constants.dart';
 import 'package:morse_pad/src/utilities/custom_icons.dart';
-import 'package:morse_pad/src/utilities/perspective_rotation.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
+import 'package:morse_pad/src/widgets/perspective_rotation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -91,7 +91,10 @@ class _AboutPageState extends State<AboutPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               data: _aboutMorseCode,
-              styleSheet: MarkdownStyleSheet(blockSpacing: 16),
+              styleSheet: MarkdownStyleSheet(
+                blockSpacing: 16,
+                p: const TextStyle(fontSize: 16),
+              ),
               onTapLink: (text, href, title) {
                 launchUrl(
                   Uri.parse(href!),
