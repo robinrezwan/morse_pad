@@ -108,6 +108,7 @@ class CustomThemeData {
       fontFeatures: const [
         FontFeature.disable('calt'),
         FontFeature.disable('clig'),
+        FontFeature.disable('kern'),
       ],
     );
   }
@@ -126,10 +127,6 @@ class CustomThemeData {
       titleTextStyle: TextStyle(
         fontFamily: 'Product Sans',
         fontSize: 20,
-        fontFeatures: const [
-          FontFeature.disable('calt'),
-          FontFeature.disable('clig'),
-        ],
         color: colorScheme.onSurfaceVariant,
       ),
     );

@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 import 'package:morse_pad/src/utilities/constants.dart';
 import 'package:morse_pad/src/utilities/custom_icons.dart';
+import 'package:morse_pad/src/utilities/perspective_rotation.dart';
 import 'package:morse_pad/src/widgets/custom_icon_button.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+// Logger
+final Logger log = Logger();
 
 class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);
@@ -13,14 +20,14 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  String _version = "Version: 0.0.0";
-
-  Offset _offset = Offset.zero;
+  String _appVersion = "Version: 0.0.0";
+  String _aboutMorseCode = "";
 
   @override
   void initState() {
     super.initState();
     _getPackageInfo();
+    _getAboutMorseCode();
   }
 
   @override
@@ -38,6 +45,7 @@ class _AboutPageState extends State<AboutPage> {
         title: const Text("About"),
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Container(
@@ -45,38 +53,24 @@ class _AboutPageState extends State<AboutPage> {
               padding: const EdgeInsets.only(top: 8),
               child: Column(
                 children: [
-                  Transform(
-                    transform: Matrix4.identity()
-                      ..rotateX(0.01 * _offset.dy)
-                      ..rotateY(-0.01 * _offset.dx),
-                    alignment: FractionalOffset.center,
-                    child: GestureDetector(
-                      onPanUpdate: (details) {
-                        setState(() => _offset += details.delta);
-                      },
-                      onDoubleTap: () {
-                        setState(() => _offset = Offset.zero);
-                      },
-                      child: SvgPicture.asset(
-                        'lib/assets/images/app_icon.svg',
-                        width: 60,
-                        height: 60,
-                        theme: SvgTheme(
-                          currentColor:
-                              Theme.of(context).textTheme.displayLarge!.color,
-                        ),
+                  PerspectiveRotation(
+                    child: SvgPicture.asset(
+                      'lib/assets/images/app_icon.svg',
+                      width: 60,
+                      height: 60,
+                      theme: SvgTheme(
+                        currentColor:
+                            Theme.of(context).textTheme.displayLarge!.color,
                       ),
                     ),
                   ),
                   const Text(
                     appTitle,
-                    style: TextStyle(
-                      fontSize: 22,
-                    ),
+                    style: TextStyle(fontSize: 22),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    _version,
+                    _appVersion,
                     style: TextStyle(
                       fontSize: 12,
                       color: Theme.of(context).textTheme.caption!.color,
@@ -90,10 +84,20 @@ class _AboutPageState extends State<AboutPage> {
               child: const Text(
                 aboutApp,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
+                style: TextStyle(fontSize: 16),
               ),
+            ),
+            Markdown(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              data: _aboutMorseCode,
+              styleSheet: MarkdownStyleSheet(blockSpacing: 16),
+              onTapLink: (text, href, title) {
+                launchUrl(
+                  Uri.parse(href!),
+                  mode: LaunchMode.externalApplication,
+                );
+              },
             ),
           ],
         ),
@@ -105,7 +109,16 @@ class _AboutPageState extends State<AboutPage> {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     setState(() {
-      _version = "Version: ${packageInfo.version}";
+      _appVersion = "Version: ${packageInfo.version}";
+    });
+  }
+
+  Future<void> _getAboutMorseCode() async {
+    final String aboutMorseCode = await DefaultAssetBundle.of(context)
+        .loadString('lib/assets/text/about_morse_code.md');
+
+    setState(() {
+      _aboutMorseCode = aboutMorseCode;
     });
   }
 }

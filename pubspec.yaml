@@ -36,6 +36,8 @@ dependencies:
   shared_preferences: ^2.0.13
   flutter_icons: ^1.1.0
   flutter_svg: ^1.0.3
+  flutter_markdown: ^0.6.10
+  url_launcher: ^6.1.2
   percent_indicator: ^4.2.1
   share_plus: ^4.0.4
   fluttertoast: ^8.0.9
@@ -90,6 +92,7 @@ flutter:
     - lib/assets/images/splash_screen_dark.png
     - lib/assets/images/splash_screen_v31.png
     - lib/assets/images/splash_screen_dark_v31.png
+    - lib/assets/text/about_morse_code.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
