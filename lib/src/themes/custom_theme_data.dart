@@ -53,7 +53,9 @@ class CustomThemeData {
       cardTheme: _cardTheme(baseThemeDataLight).copyWith(
         color: colorSchemeLight.surface,
       ),
-      bottomSheetTheme: _bottomSheetTheme(baseThemeDataLight),
+      bottomSheetTheme: _bottomSheetTheme(baseThemeDataLight).copyWith(
+        backgroundColor: const Color(0xFFF3F3F3),
+      ),
       elevatedButtonTheme: _elevatedButtonTheme(),
       splashFactory: _splashFactory(),
     );
@@ -146,8 +148,8 @@ class CustomThemeData {
     return baseThemeData.bottomSheetTheme.copyWith(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15),
-          topRight: Radius.circular(15),
+          topLeft: Radius.circular(0),
+          topRight: Radius.circular(0),
         ),
       ),
     );
