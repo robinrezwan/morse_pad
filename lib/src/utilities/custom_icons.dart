@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class CustomIcons {
   CustomIcons._();
 
-  static const IconData about = Feather.info;
-  static const IconData back = Feather.arrow_left;
-  static const IconData lightTheme = Feather.sun;
-  static const IconData darkTheme = Feather.moon;
-  static const IconData chevronLeft = Feather.chevron_left;
-  static const IconData chevronRight = Feather.chevron_right;
-  static const IconData text = Feather.type;
-  static const IconData code = Feather.code;
-  static const IconData play = Feather.play;
-  static const IconData stop = Feather.pause;
-  static const IconData copy = Feather.copy;
-  static const IconData paste = Feather.clipboard;
-  static const IconData clear = Feather.x;
-  static const IconData share = Feather.share_2;
+  static const IconData about = FeatherIcons.info;
+  static const IconData back = FeatherIcons.arrowLeft;
+  static const IconData lightTheme = FeatherIcons.sun;
+  static const IconData darkTheme = FeatherIcons.moon;
+  static const IconData chevronLeft = FeatherIcons.chevronLeft;
+  static const IconData chevronRight = FeatherIcons.chevronRight;
+  static const IconData text = FeatherIcons.type;
+  static const IconData code = FeatherIcons.code;
+  static const IconData play = FeatherIcons.play;
+  static const IconData stop = FeatherIcons.pause;
+  static const IconData copy = FeatherIcons.copy;
+  static const IconData paste = FeatherIcons.clipboard;
+  static const IconData clear = FeatherIcons.x;
+  static const IconData share = FeatherIcons.share2;
 
   static const IconData backspace = Icons.backspace_outlined;
   static const IconData enter = Icons.keyboard_return;
