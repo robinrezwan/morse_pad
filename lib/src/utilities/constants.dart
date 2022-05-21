@@ -18,4 +18,4 @@ const String emptyText = "Empty text";
 
 const String codeCopied = "Code copied";
 const String codeCleared = "Code cleared";
-const String emptyCode = "Code text";
+const String emptyCode = "Empty code";
